@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>GrooGp</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="encrypted-assets.js"></script>
+    <script src="client-init.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- twemoji library برای تبدیل ایموجی‌ها به تصاویر SVG اندرویدی (Noto Emoji) -->
+    <script src="https://cdn.jsdelivr.net/npm/twemoji@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <!-- Theme Toggle Button -->
+        <button class="login-theme-toggle" id="login-theme-toggle" title="تغییر تم">
+            <svg class="theme-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg class="theme-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
+                style="display: none;">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2"></line>
+                <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2"></line>
+                <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2"></line>
+                <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2"></line>
+            </svg>
+        </button>
+
+        <div class="modal-content" id="login-form-modal">
+            <!-- Logo/Icon -->
+            <div class="login-logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#5288c1;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#6a9dd4;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#5288c1;stop-opacity:1" />
+                        </linearGradient>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                            <feMerge>
+                                <feMergeNode in="coloredBlur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <circle cx="50" cy="50" r="45" fill="url(#logoGradient)" opacity="0.1" />
+                    <path
+                        d="M30 35 Q30 25 40 25 L60 25 Q70 25 70 35 L70 55 Q70 65 60 65 L50 65 L50 75 L40 65 L40 65 Q30 65 30 55 Z"
+                        fill="url(#logoGradient)" filter="url(#glow)" stroke="url(#logoGradient)" stroke-width="2" />
+                    <circle cx="42" cy="45" r="3" fill="white" />
+                    <circle cx="58" cy="45" r="3" fill="white" />
+                    <path d="M42 52 Q50 58 58 52" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                        fill="none" />
+                </svg>
+            </div>
+
+            <h2>ورود به GrooGp</h2>
+
+            <div class="login-form">
+                <div contenteditable="true" class="editable-field" id="username"
+                    data-placeholder="نام کاربری یا آیدی (بدون @)" data-maxlength="20"></div>
+                <div class="password-input-wrapper">
+                    <input type="password" id="password" placeholder="رمز عبور">
+                    <span class="password-toggle-icon" data-target="password">
+                        <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </span>
+                </div>
+                <button id="connect-btn">ورود</button>
+            </div>
+
+            <div class="divider">
+                <span>یا</span>
+            </div>
+
+            <div id="googleLoginBtn" class="google-login-btn"></div>
+
+            <div class="signup-link">
+                حساب کاربری ندارید؟ <a href="#" id="show-signup">ثبت‌نام کنید</a>
+            </div>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <div class="footer-text">ساخته شده توسط</div>
+                <div class="footer-brand">𝙂𝙧𝙤𝙫𝙚 𝙨𝙩𝙧𝙚𝙚𝙩 🇮🇷</div>
+                <a href="https://t.me/Grove_Street_channel" target="_blank" class="footer-telegram">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.752-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.121.099.155.232.171.326.016.094.036.308.02.475z" />
+                    </svg>
+                    <span>کانال تلگرام</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Signup Form -->
+        <div class="modal-content" id="signup-modal" style="display: none;">
+            <!-- Logo/Icon -->
+            <div class="login-logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#5288c1;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#6a9dd4;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#5288c1;stop-opacity:1" />
+                        </linearGradient>
+                        <filter id="glow2">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                            <feMerge>
+                                <feMergeNode in="coloredBlur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <circle cx="50" cy="50" r="45" fill="url(#logoGradient2)" opacity="0.1" />
+                    <path
+                        d="M30 35 Q30 25 40 25 L60 25 Q70 25 70 35 L70 55 Q70 65 60 65 L50 65 L50 75 L40 65 L40 65 Q30 65 30 55 Z"
+                        fill="url(#logoGradient2)" filter="url(#glow2)" stroke="url(#logoGradient2)" stroke-width="2" />
+                    <circle cx="42" cy="45" r="3" fill="white" />
+                    <circle cx="58" cy="45" r="3" fill="white" />
+                    <path d="M42 52 Q50 58 58 52" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                        fill="none" />
+                </svg>
+            </div>
+
+            <h2>ثبت‌نام</h2>
+
+            <div class="login-form">
+                <div contenteditable="true" class="editable-field" id="signup-username" data-placeholder="نام کاربری"
+                    data-maxlength="20"></div>
+                <div class="userid-input-group">
+                    <span class="userid-prefix">@</span>
+                    <div contenteditable="true" class="editable-field" id="signup-userid" data-placeholder="آیدی یونیک"
+                        data-maxlength="20"></div>
+                </div>
+                <div class="password-input-wrapper">
+                    <input type="password" id="signup-password" placeholder="رمز عبور">
+                    <span class="password-toggle-icon" data-target="signup-password">
+                        <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </span>
+                </div>
+                <div class="password-input-wrapper">
+                    <input type="password" id="signup-confirm-password" placeholder="تکرار رمز عبور">
+                    <span class="password-toggle-icon" data-target="signup-confirm-password">
+                        <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </span>
+                </div>
+                <button id="signup-btn">ثبت‌نام</button>
+            </div>
+
+            <div class="divider">
+                <span>یا</span>
+            </div>
+
+            <div id="googleSignupBtn" class="google-login-btn"></div>
+
+            <div class="signup-link">
+                حساب کاربری دارید؟ <a href="#" id="show-login">وارد شوید</a>
+            </div>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <div class="footer-text">ساخته شده توسط</div>
+                <div class="footer-brand">𝙂𝙧𝙤𝙫𝙚 𝙨𝙩𝙧𝙚𝙚𝙩 🇮🇷</div>
+                <a href="https://t.me/Grove_Street_channel" target="_blank" class="footer-telegram">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.752-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.121.099.155.232.171.326.016.094.036.308.02.475z" />
+                    </svg>
+                    <span>کانال تلگرام</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Password Setup Modal (برای کاربران گوگل) -->
+        <div class="modal-content" id="password-setup-modal" style="display: none;">
+            <!-- Logo/Icon -->
+            <div class="login-logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#5288c1;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#6a9dd4;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#5288c1;stop-opacity:1" />
+                        </linearGradient>
+                        <filter id="glow3">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                            <feMerge>
+                                <feMergeNode in="coloredBlur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <circle cx="50" cy="50" r="45" fill="url(#logoGradient3)" opacity="0.1" />
+                    <path
+                        d="M30 35 Q30 25 40 25 L60 25 Q70 25 70 35 L70 55 Q70 65 60 65 L50 65 L50 75 L40 65 L40 65 Q30 65 30 55 Z"
+                        fill="url(#logoGradient3)" filter="url(#glow3)" stroke="url(#logoGradient3)" stroke-width="2" />
+                    <circle cx="42" cy="45" r="3" fill="white" />
+                    <circle cx="58" cy="45" r="3" fill="white" />
+                    <path d="M42 52 Q50 58 58 52" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                        fill="none" />
+                </svg>
+            </div>
+
+            <h2>تنظیم رمز عبور</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 13px; line-height: 1.5;">
+                برای امنیت بیشتر حساب کاربری خود، لطفا یک رمز عبور تنظیم کنید
+            </p>
+
+            <div class="login-form">
+                <div class="password-input-wrapper">
+                    <input type="password" id="setup-password" placeholder="رمز عبور جدید" maxlength="50">
+                    <span class="password-toggle-icon" data-target="setup-password">
+                        <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </span>
+                </div>
+                <div class="password-input-wrapper">
+                    <input type="password" id="setup-confirm-password" placeholder="تکرار رمز عبور" maxlength="50">
+                    <span class="password-toggle-icon" data-target="setup-confirm-password">
+                        <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </span>
+                </div>
+                <button id="setup-password-btn">تنظیم رمز عبور</button>
+            </div>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <div class="footer-text">ساخته شده توسط</div>
+                <div class="footer-brand">𝙂𝙧𝙤𝙫𝙚 𝙨𝙩𝙧𝙚𝙚𝙩 🇮🇷</div>
+                <a href="https://t.me/Grove_Street_channel" target="_blank" class="footer-telegram">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.752-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.121.099.155.232.171.326.016.094.036.308.02.475z" />
+                    </svg>
+                    <span>کانال تلگرام</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container" style="display: none;">
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar" style="display: none;">
+            <div class="sidebar-header">
+                <div contenteditable="true" class="search-box" id="search-box" data-placeholder="جستجو (@username)">
+                </div>
+            </div>
+
+            <div class="chats-list" id="chats-list">
+                <div class="chat-item active" data-chat="global">
+                    <div class="chat-avatar">🌐</div>
+                    <div class="chat-info">
+                        <div class="chat-name">گروه عمومی</div>
+                        <div class="chat-last-message">@publik_grup</div>
+                    </div>
+                    <div class="chat-meta">
+                        <div class="chat-time">الان</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- دکمه شناور گروه/کانال جدید -->
+            <button class="floating-new-chat-btn" id="new-chat-btn" title="گروه/کانال جدید">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <div class="chat-header-main">
+                    <div class="chat-header-info">
+                        <div class="chat-avatar">🌐</div>
+                        <div class="chat-header-details" id="chat-header-details">
+                            <div class="chat-header-name">گروه عمومی</div>
+                            <div class="chat-header-status" id="online-count">@publik_grup</div>
+                        </div>
+                    </div>
+                    <div class="chat-header-actions">
+                        <button class="back-to-home-btn" id="back-to-home-btn" title="بازگشت به صفحه اصلی">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- header audio player (hidden until an audio starts) -->
+                <div id="header-audio-player" class="header-audio-player" style="display: none;">
+                    <div class="header-audio-top">
+                        <button class="audio-play-btn">
+                            <svg class="play-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                            <svg class="pause-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
+                                style="display: none;">
+                                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                            </svg>
+                        </button>
+                        <div class="header-audio-title"></div>
+                        <button class="header-audio-close-btn" title="بستن">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="audio-progress-container">
+                        <div class="audio-time current-time">0:00</div>
+                        <div class="audio-progress-bar">
+                            <div class="audio-progress-fill"></div>
+                            <div class="audio-progress-handle"></div>
+                        </div>
+                        <div class="audio-time total-time">0:00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="messages-container">
+                <div class="messages-area" id="messages"></div>
+
+                <!-- صفحه خوش‌آمدگویی -->
+                <div class="welcome-screen" id="welcome-screen">
+                    <div class="welcome-content">
+                        <!-- عنوان و لوگو در کنار هم -->
+                        <div class="welcome-header">
+                            <div class="welcome-logo">
+                                <svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </div>
+                            <h2 class="welcome-title">GrooGp</h2>
+                        </div>
+
+                        <!-- کادر جستجو در صفحه خوش‌آمدگویی -->
+                        <div class="welcome-search-container">
+                            <div contenteditable="true" class="welcome-search-box" id="welcome-search-box"
+                                data-placeholder="جستجو (@username)"></div>
+                            <button class="welcome-settings-btn" id="welcome-settings-btn" title="تنظیمات">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- لیست چت‌ها در صفحه خوش‌آمدگویی -->
+                        <div class="welcome-chats-container" id="welcome-chats-container">
+                            <div class="welcome-chats-header">
+                                <h3 class="welcome-chats-title">گفتگوهای شما</h3>
+                                <button class="welcome-new-chat-btn" id="welcome-new-chat-btn" title="گروه/کانال جدید">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="welcome-chats-list" id="welcome-chats-list">
+                                <!-- چت‌ها به صورت خودکار اینجا اضافه می‌شوند -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- دکمه اسکرول به پایین -->
+                <button class="scroll-to-bottom" id="scroll-to-bottom" style="display: none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="message-input-area">
+                <button type="button" class="input-icon emoji-btn" id="emoji-btn" title="ایموجی">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                        <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                        <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                    </svg>
+                </button>
+                <div id="message-input" class="message-input-editable" contenteditable="false"
+                    data-placeholder="پیام خود را بنویسید..."></div>
+                <label for="file-attachment-input" class="input-icon attachment-icon"
+                    title="پیوست فایل (چند فایل همزمان)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                    </svg>
+                </label>
+                <input type="file" id="file-attachment-input" accept="*/*" multiple style="display: none;">
+                <button id="send-btn" disabled>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M2 21L23 12L2 3V10L17 12L2 14V21Z" fill="currentColor" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Emoji Picker -->
+            <div class="emoji-picker" id="emoji-picker" style="display: none;">
+                <div class="emoji-picker-header">
+                    <input type="text" class="emoji-search" id="emoji-search" placeholder="جستجو...">
+                    <div class="emoji-categories">
+                        <button class="emoji-category" data-category="recent" title="اخیراً استفاده شده">🕒</button>
+                        <button class="emoji-category active" data-category="smileys">😊</button>
+                        <button class="emoji-category" data-category="gestures">👋</button>
+                        <button class="emoji-category" data-category="animals">🐶</button>
+                        <button class="emoji-category" data-category="food">🍕</button>
+                        <button class="emoji-category" data-category="travel">✈️</button>
+                        <button class="emoji-category" data-category="objects">⚽</button>
+                        <button class="emoji-category" data-category="symbols">❤️</button>
+                        <button class="emoji-category" data-category="flags">🏁</button>
+                    </div>
+                </div>
+                <div class="emoji-picker-content" id="emoji-picker-content"></div>
+            </div>
+
+            <!-- دکمه پیوستن (برای گروه‌ها/کانال‌هایی که کاربر عضو نیست) -->
+            <div class="join-group-area" id="join-group-area" style="display: none;">
+                <button class="join-group-btn" id="join-group-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>
+                    <span>پیوستن</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Context Menu (right-click/long-press) -->
+    <div id="member-context-menu" class="context-menu" style="display: none;">
+        <div class="context-menu-item" id="member-context-menu-add">افزودن به مدیر</div>
+        <div class="context-menu-item danger" id="member-context-menu-ban" style="display: none;">محروم کردن</div>
+    </div>
+
+    <!-- Group Members Modal -->
+    <div id="members-modal" class="members-modal" style="display: none;">
+        <div class="members-modal-content">
+            <div class="members-modal-header">
+                <h3>اطلاعات گروه</h3>
+                <span class="close-modal" id="close-members-modal">✕</span>
+            </div>
+
+            <!-- اطلاعات گروه -->
+            <div class="group-info-section">
+                <div class="group-info-avatar-container">
+                    <div class="group-info-avatar" id="group-info-avatar-display">🌐</div>
+                </div>
+                <div class="group-info-details">
+                    <div class="group-info-name">گروه عمومی</div>
+                    <div class="group-info-userid copyable" id="group-info-userid-copy" title="کلیک کنید تا کپی شود">
+                        @publik_grup
+                        <span class="copy-icon">📋</span>
+                    </div>
+                    <div class="group-info-description" id="group-info-description" style="display: none;"></div>
+                    <div class="group-info-members-count" id="group-info-members-count">0 عضو</div>
+                </div>
+                <!-- دکمه ویرایش (فقط برای ادمین) -->
+                <button class="edit-group-info-btn" id="edit-group-info-btn" style="display: none;"
+                    title="ویرایش اطلاعات">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                </button>
+                <!-- دکمه خروج از گروه/کانال -->
+                <button class="leave-group-btn" id="leave-group-btn" style="display: none;" title="خروج از گروه/کانال">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- بخش کاربران حذف‌شده -->
+            <div class="banned-users-section" id="banned-users-section" style="display: none;">
+                <button class="view-banned-users-btn" id="view-banned-users-btn" title="نمایش کاربران حذف‌شده">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                    </svg>
+                    <span>کاربران محروم</span>
+                </button>
+            </div>
+
+            <div class="members-list-header">
+                <h4>اعضای گروه</h4>
+            </div>
+            <div class="members-list" id="members-list"></div>
+        </div>
+    </div>
+
+    <!-- Banned Users Modal -->
+    <div id="banned-users-modal" class="members-modal" style="display: none;">
+        <div class="members-modal-content">
+            <div class="members-modal-header">
+                <h3>کاربران حذف‌شده</h3>
+                <span class="close-modal" id="close-banned-users-modal">✕</span>
+            </div>
+            <div class="members-list-header">
+                <h4>لیست کاربران حذف‌شده از گروه عمومی</h4>
+            </div>
+            <div class="members-list" id="banned-users-list"></div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <h3>تنظیمات</h3>
+                <span class="close-modal" id="close-settings-modal">✕</span>
+            </div>
+            <div class="settings-body">
+                <div class="user-profile">
+                    <div class="profile-avatar-container">
+                        <div class="profile-avatar" id="profile-avatar">U</div>
+                        <label for="profile-picture-input" class="change-avatar-btn" title="تغییر عکس پروفایل">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                                </path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                        </label>
+                        <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name" id="profile-name">نام کاربری</div>
+                        <div class="profile-email" id="profile-email">ایمیل</div>
+                        <div class="profile-userid" id="profile-userid">@userid</div>
+                        <div class="profile-bio empty-bio" id="profile-bio">درباره خودتان بنویسید</div>
+                    </div>
+                    <!-- دکمه‌های ویرایش و خروج -->
+                    <button class="edit-profile-info-btn" id="edit-profile-info-btn" title="ویرایش اطلاعات">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                    <button id="logout-btn" class="logout-button" title="خروج از حساب">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- دکمه ادمین (فقط برای کاربر خاص) -->
+            <div class="admin-section" id="admin-section" style="display: none;">
+                <button class="admin-btn" id="admin-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" />
+                    </svg>
+                    <span>ادمین</span>
+                </button>
+            </div>
+
+            <div class="settings-footer">
+                <div class="settings-footer-text">نسخه v2.1</div>
+                <!-- دکمه تغییر تم در فوتر -->
+                <button class="theme-footer-btn" id="theme-toggle-btn" title="تغییر تم">
+                    <span class="theme-icon" id="theme-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <button class="back-btn" id="close-edit-profile-modal" title="بازگشت">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                </button>
+                <h3>ویرایش اطلاعات</h3>
+            </div>
+            <div class="settings-body">
+                <div class="edit-profile-form">
+                    <div class="form-group">
+                        <label>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            نام کاربری
+                        </label>
+                        <div contenteditable="true" class="editable-field modern-input" id="edit-username-input"
+                            data-placeholder="نام کاربری جدید" data-maxlength="20"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <polyline points="17 11 19 13 23 9"></polyline>
+                            </svg>
+                            آیدی کاربری
+                        </label>
+                        <div class="userid-input-group modern-userid-group">
+                            <span class="userid-prefix">@</span>
+                            <div contenteditable="true" class="editable-field" id="edit-userid-input"
+                                data-placeholder="آیدی یونیک" data-maxlength="20"></div>
+                        </div>
+                        <p class="field-hint">فقط حروف انگلیسی، اعداد و _ مجاز است</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            بیوگرافی
+                            <span class="optional-badge">اختیاری</span>
+                        </label>
+                        <div contenteditable="true" class="editable-field modern-textarea" id="edit-bio-input"
+                            data-placeholder="بیوگرافی خود را وارد کنید..." data-maxlength="200"></div>
+                        <p class="field-hint">حداکثر 200 کاراکتر</p>
+                    </div>
+
+                    <div class="settings-divider modern-divider"></div>
+
+                    <button class="change-password-btn modern-secondary-btn" id="change-password-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <span>تغییر رمز عبور</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sticky Footer with Save Button -->
+            <div class="edit-profile-footer">
+                <button class="primary-btn modern-save-btn sticky-save-btn" id="save-profile-info-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>ذخیره تغییرات</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="change-password-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <button class="back-btn" id="back-to-profile-btn" title="بازگشت">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                </button>
+                <h3>تغییر رمز عبور</h3>
+            </div>
+            <div class="settings-body">
+                <p class="modal-description">برای امنیت حساب خود، رمز عبور قوی انتخاب کنید</p>
+
+                <div class="form-group">
+                    <label for="current-password-input">رمز عبور فعلی</label>
+                    <div class="password-input-wrapper-full">
+                        <input type="password" id="current-password-input" placeholder="رمز عبور فعلی خود را وارد کنید"
+                            maxlength="50" autocomplete="current-password">
+                        <span class="password-toggle-icon-inside" data-target="current-password-input">
+                            <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="new-password-input">رمز عبور جدید</label>
+                    <div class="password-input-wrapper-full">
+                        <input type="password" id="new-password-input" placeholder="رمز عبور جدید (حداقل 4 کاراکتر)"
+                            maxlength="50" autocomplete="new-password">
+                        <span class="password-toggle-icon-inside" data-target="new-password-input">
+                            <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-new-password-input">تکرار رمز عبور جدید</label>
+                    <div class="password-input-wrapper-full">
+                        <input type="password" id="confirm-new-password-input"
+                            placeholder="رمز عبور جدید را دوباره وارد کنید" maxlength="50" autocomplete="new-password">
+                        <span class="password-toggle-icon-inside" data-target="confirm-new-password-input">
+                            <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <button class="primary-btn" id="save-new-password-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="margin-left: 8px;">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    تغییر رمز عبور
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Info Modal -->
+    <div id="user-info-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <h3>اطلاعات کاربر</h3>
+                <span class="close-modal" id="close-user-info-modal">✕</span>
+            </div>
+            <div class="settings-body">
+                <div class="user-profile">
+                    <div class="profile-avatar" id="user-info-avatar">U</div>
+                    <div class="profile-info">
+                        <div class="profile-name" id="user-info-name">نام کاربری</div>
+                        <div class="profile-email" id="user-info-email">ایمیل</div>
+                        <div class="profile-userid" id="user-info-userid">@userid</div>
+                        <div class="profile-bio" id="user-info-bio"
+                            style="display: none; margin-top: 10px; color: #8b98a5; font-size: 14px; line-height: 1.5;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-divider"></div>
+                <button id="send-message-to-user-btn" class="save-userid-btn" style="width: 100%;">ارسال پیام</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Avatar Preview Modal -->
+    <div id="avatar-preview-modal" class="avatar-preview-modal" style="display: none;">
+        <div class="avatar-preview-content">
+            <span class="close-modal" id="close-avatar-preview">✕</span>
+            <div class="avatar-preview-image"></div>
+        </div>
+    </div>
+
+    <!-- Media Preview Modal -->
+    <div id="media-preview-modal" class="avatar-preview-modal" style="display: none;">
+        <span class="close-modal" id="close-media-preview">✕</span>
+        <div class="media-preview-content">
+            <!-- content injected dynamically -->
+        </div>
+    </div>
+
+    <!-- New Group/Channel Modal -->
+    <div id="new-chat-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <h3>گروه/کانال جدید</h3>
+                <span class="close-modal" id="close-new-chat-modal">✕</span>
+            </div>
+            <div class="settings-body">
+                <div class="new-chat-options">
+                    <button class="new-chat-option-btn" id="create-group-btn">
+                        <div class="option-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                            </svg>
+                        </div>
+                        <div class="option-info">
+                            <div class="option-title">گروه جدید</div>
+                            <div class="option-description">ساخت گروه برای چت گروهی</div>
+                        </div>
+                    </button>
+
+                    <button class="new-chat-option-btn" id="create-channel-btn">
+                        <div class="option-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                            </svg>
+                        </div>
+                        <div class="option-info">
+                            <div class="option-title">کانال جدید</div>
+                            <div class="option-description">ساخت کانال برای ارسال پیام به اعضا</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Group Modal -->
+    <div id="create-group-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <h3>ساخت گروه جدید</h3>
+                <span class="close-modal" id="close-create-group-modal">✕</span>
+            </div>
+            <div class="settings-body">
+                <div class="create-chat-form">
+                    <div class="profile-avatar-container" style="margin: 0 auto 20px;">
+                        <div class="profile-avatar" id="new-group-avatar"
+                            style="width: 100px; height: 100px; font-size: 42px;">گ</div>
+                        <label for="new-group-picture-input" class="change-avatar-btn" title="انتخاب عکس گروه">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                                </path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                        </label>
+                        <input type="file" id="new-group-picture-input" accept="image/*" style="display: none;">
+                    </div>
+
+                    <div class="form-group">
+                        <label>نام گروه</label>
+                        <div contenteditable="true" class="editable-field" id="group-name-input"
+                            data-placeholder="نام گروه را وارد کنید" data-maxlength="50"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>آیدی گروه (اختیاری)</label>
+                        <div class="userid-input-group" style="margin: 0;">
+                            <span class="userid-prefix">@</span>
+                            <div contenteditable="true" class="editable-field" id="group-id-input"
+                                data-placeholder="آیدی یونیک گروه" data-maxlength="30"></div>
+                        </div>
+                        <p class="userid-hint" style="margin-top: 5px;">فقط حروف انگلیسی، اعداد و _ مجاز است</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>توضیحات (اختیاری)</label>
+                        <div contenteditable="true" class="editable-field" id="group-description-input"
+                            data-placeholder="توضیحات گروه" data-maxlength="200" style="min-height: 60px;"></div>
+                    </div>
+
+                    <button class="primary-btn" id="confirm-create-group-btn">ساخت گروه</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Channel Modal -->
+    <div id="create-channel-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <h3>ساخت کانال جدید</h3>
+                <span class="close-modal" id="close-create-channel-modal">✕</span>
+            </div>
+            <div class="settings-body">
+                <div class="create-chat-form">
+                    <div class="profile-avatar-container" style="margin: 0 auto 20px;">
+                        <div class="profile-avatar" id="new-channel-avatar"
+                            style="width: 100px; height: 100px; font-size: 42px;">ک</div>
+                        <label for="new-channel-picture-input" class="change-avatar-btn" title="انتخاب عکس کانال">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                                </path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                        </label>
+                        <input type="file" id="new-channel-picture-input" accept="image/*" style="display: none;">
+                    </div>
+
+                    <div class="form-group">
+                        <label>نام کانال</label>
+                        <div contenteditable="true" class="editable-field" id="channel-name-input"
+                            data-placeholder="نام کانال را وارد کنید" data-maxlength="50"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>آیدی کانال (اختیاری)</label>
+                        <div class="userid-input-group" style="margin: 0;">
+                            <span class="userid-prefix">@</span>
+                            <div contenteditable="true" class="editable-field" id="channel-id-input"
+                                data-placeholder="آیدی یونیک کانال" data-maxlength="30"></div>
+                        </div>
+                        <p class="userid-hint" style="margin-top: 5px;">فقط حروف انگلیسی، اعداد و _ مجاز است</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>توضیحات (اختیاری)</label>
+                        <div contenteditable="true" class="editable-field" id="channel-description-input"
+                            data-placeholder="توضیحات کانال" data-maxlength="200" style="min-height: 60px;"></div>
+                    </div>
+
+                    <button class="primary-btn" id="confirm-create-channel-btn">ساخت کانال</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- Edit Group Info Modal -->
+    <div id="edit-group-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <h3>ویرایش اطلاعات</h3>
+                <span class="close-modal" id="close-edit-group-modal">✕</span>
+            </div>
+            <div class="settings-body">
+                <!-- بخش تغییر پروفایل -->
+                <div class="profile-avatar-container" style="margin: 0 auto 20px;">
+                    <div class="profile-avatar" id="edit-group-avatar-display"
+                        style="width: 100px; height: 100px; font-size: 42px;">🌐</div>
+                    <label for="edit-group-profile-input" class="change-avatar-btn" title="تغییر عکس پروفایل">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                            </path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                    </label>
+                    <input type="file" id="edit-group-profile-input" accept="image/*" style="display: none;">
+                </div>
+
+                <!-- فیلدهای ویرایش -->
+                <div class="form-group">
+                    <label>نام گروه/کانال</label>
+                    <div contenteditable="true" class="editable-field" id="edit-modal-group-name"
+                        data-placeholder="نام جدید" data-maxlength="50"></div>
+                </div>
+                <div class="form-group">
+                    <label>آیدی گروه/کانال (اختیاری)</label>
+                    <div class="userid-input-group" style="margin: 0;">
+                        <span class="userid-prefix">@</span>
+                        <div contenteditable="true" class="editable-field" id="edit-modal-group-userid"
+                            data-placeholder="آیدی یونیک" data-maxlength="30"></div>
+                    </div>
+                    <p class="userid-hint" style="margin-top: 5px;">فقط حروف انگلیسی، اعداد و _ مجاز است</p>
+                </div>
+                <div class="form-group">
+                    <label>بیوگرافی (اختیاری)</label>
+                    <div contenteditable="true" class="editable-field" id="edit-modal-group-description"
+                        data-placeholder="بیوگرافی گروه/کانال" data-maxlength="200" style="min-height: 60px;"></div>
+                </div>
+                <button class="primary-btn" id="save-edit-group-info-btn">ذخیره تغییرات</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Database Management Modal -->
+    <div id="admin-database-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <h3>مدیریت</h3>
+                <button class="back-btn" id="close-admin-database-modal" title="بازگشت">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                </button>
+            </div>
+            <div class="settings-body">
+                <div class="admin-database-section">
+                    <button class="database-management-btn" id="database-management-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                        </svg>
+                        <span>مدیریت دیتابیس</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Database List Modal -->
+    <div id="database-list-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content">
+            <div class="settings-modal-header">
+                <button class="back-btn" id="back-to-admin-btn" title="بازگشت">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                </button>
+                <h3>مدیریت دیتابیس</h3>
+            </div>
+            <div class="settings-body">
+                <div class="database-list-section">
+                    <!-- دیتابیس کاربران -->
+                    <div class="database-item">
+                        <div class="database-info">
+                            <div class="database-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                                </svg>
+                            </div>
+                            <div class="database-details">
+                                <div class="database-name">users.db</div>
+                                <div class="database-description">دیتابیس کاربران</div>
+                            </div>
+                        </div>
+                        <div class="database-actions">
+                            <label for="upload-users-db" class="database-action-btn upload-btn" title="آپلود">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                            </label>
+                            <input type="file" id="upload-users-db" data-db="users" accept=".db" style="display: none;">
+                            <button class="database-action-btn download-btn" data-db="users" title="دانلود">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                            </button>
+                            <button class="database-action-btn delete-btn" data-db="users" title="حذف">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path
+                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                    </path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- دیتابیس پیام‌ها -->
+                    <div class="database-item">
+                        <div class="database-info">
+                            <div class="database-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                                </svg>
+                            </div>
+                            <div class="database-details">
+                                <div class="database-name">messages.db</div>
+                                <div class="database-description">دیتابیس پیام‌ها</div>
+                            </div>
+                        </div>
+                        <div class="database-actions">
+                            <label for="upload-messages-db" class="database-action-btn upload-btn" title="آپلود">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                            </label>
+                            <input type="file" id="upload-messages-db" data-db="messages" accept=".db"
+                                style="display: none;">
+                            <button class="database-action-btn download-btn" data-db="messages" title="دانلود">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                            </button>
+                            <button class="database-action-btn delete-btn" data-db="messages" title="حذف">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path
+                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                    </path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Chat Confirmation Modal -->
+    <div id="delete-chat-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content" style="max-width: 400px;">
+            <div class="settings-modal-header">
+                <h3>حذف گفتگو</h3>
+                <span class="close-modal" id="close-delete-chat-modal">✕</span>
+            </div>
+            <div class="settings-body">
+                <p style="color: #8b98a5; margin-bottom: 20px; line-height: 1.6;">
+                    آیا مطمئن هستید که می‌خواهید این گفتگو را حذف کنید؟
+                </p>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #fff;">
+                        <input type="checkbox" id="delete-for-both" style="width: 18px; height: 18px; cursor: pointer;">
+                        <span>حذف برای طرف مقابل هم</span>
+                    </label>
+                    <p style="color: #8b98a5; font-size: 12px; margin-top: 8px; margin-right: 28px;">
+                        با فعال کردن این گزینه، تمام پیام‌ها برای هر دو طرف حذف می‌شود
+                    </p>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button id="confirm-delete-chat" class="save-userid-btn" style="flex: 1;">حذف</button>
+                    <button id="cancel-delete-chat" class="logout-button"
+                        style="flex: 1; background: #242f3d;">انصراف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leave Group Confirmation Modal -->
+    <div id="leave-group-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content" style="max-width: 400px;">
+            <div class="settings-modal-header">
+                <h3 id="leave-group-modal-title">خروج از گروه</h3>
+                <span class="close-modal" id="close-leave-group-modal">✕</span>
+            </div>
+            <div class="settings-body">
+                <p id="leave-group-modal-text" style="color: #8b98a5; margin-bottom: 20px; line-height: 1.6;">
+                    آیا مطمئن هستید که می‌خواهید از این گروه خارج شوید؟
+                </p>
+
+                <div id="delete-for-all-container" style="margin-bottom: 20px; display: none;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #fff;">
+                        <input type="checkbox" id="delete-group-for-all"
+                            style="width: 18px; height: 18px; cursor: pointer;">
+                        <span>حذف برای همه اعضا</span>
+                    </label>
+                    <p style="color: #f44336; font-size: 12px; margin-top: 8px; margin-right: 28px;">
+                        با فعال کردن این گزینه، گروه/کانال برای همه اعضا حذف می‌شود و قابل بازگشت نیست!
+                    </p>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button id="confirm-leave-group" class="save-userid-btn" style="flex: 1;">تایید</button>
+                    <button id="cancel-leave-group" class="logout-button"
+                        style="flex: 1; background: #242f3d;">انصراف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upgrade to Admin Confirmation Modal -->
+    <div id="upgrade-admin-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content" style="max-width: 400px;">
+            <div class="settings-modal-header">
+                <h3>ارتقا به مدیر</h3>
+                <span class="close-modal" id="close-upgrade-admin-modal">✕</span>
+            </div>
+            <div class="settings-body">
+                <p id="upgrade-admin-text" style="color: #8b98a5; margin-bottom: 20px; line-height: 1.6;"></p>
+                <div style="display: flex; gap: 10px;">
+                    <button id="confirm-upgrade-admin" class="save-userid-btn" style="flex: 1;">تایید</button>
+                    <button id="cancel-upgrade-admin" class="logout-button"
+                        style="flex: 1; background: #242f3d;">انصراف</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Files Preview Modal -->
+    <div id="files-preview-modal" class="settings-modal" style="display: none;">
+        <div class="settings-modal-content" style="max-width: 600px; max-height: 80vh;">
+            <div class="settings-modal-header">
+                <h3>پیش‌نمایش فایل‌ها</h3>
+                <span class="close-modal" id="close-files-preview-modal">✕</span>
+            </div>
+            <div class="settings-body" style="max-height: 60vh; overflow-y: auto;">
+                <div id="files-preview-list" class="files-preview-list"></div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button id="send-files-btn" class="primary-btn" style="flex: 1;">ارسال فایل‌ها</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu for Messages -->
+    <div id="message-context-menu" class="context-menu" style="display: none;">
+        <!-- Quick Reactions (first row visible, rest hidden behind expand) -->
+        <div class="quick-reactions-wrapper">
+            <div class="quick-reactions" id="quick-reactions-list">
+                <!-- first row (visible by default) -->
+                <button class="quick-reaction-btn" data-reaction="😀">😀</button>
+                <button class="quick-reaction-btn" data-reaction="😂">😂</button>
+                <button class="quick-reaction-btn" data-reaction="😍">😍</button>
+                <button class="quick-reaction-btn" data-reaction="😊">😊</button>
+                <button class="quick-reaction-btn" data-reaction="😎">😎</button>
+                <button class="quick-reaction-btn" data-reaction="🤔">🤔</button>
+                <button class="quick-reaction-btn" data-reaction="👍">👍</button>
+                <button class="quick-reaction-btn" data-reaction="👎">👎</button>
+                <button class="quick-reaction-btn" data-reaction="👌">👌</button>
+                <button class="quick-reaction-btn" data-reaction="👏">👏</button>
+                <button class="quick-reaction-btn" data-reaction="🙏">🙏</button>
+                <button class="quick-reaction-btn" data-reaction="❤️">❤️</button>
+                <button class="quick-reaction-btn" data-reaction="🇮🇷">🇮🇷</button>
+
+                <!-- additional reactions (hidden until expanded) -->
+                <button class="quick-reaction-btn extra-reaction" data-reaction="😂">😂</button>
+                <button class="quick-reaction-btn extra-reaction" data-reaction="😅">😅</button>
+                <button class="quick-reaction-btn extra-reaction" data-reaction="😆">😆</button>
+                <button class="quick-reaction-btn extra-reaction" data-reaction="😁">😁</button>
+                <button class="quick-reaction-btn extra-reaction" data-reaction="🤩">🤩</button>
+                <button class="quick-reaction-btn extra-reaction" data-reaction="🤣">🤣</button>
+                <button class="quick-reaction-btn extra-reaction" data-reaction="😢">😢</button>
+                <button class="quick-reaction-btn extra-reaction" data-reaction="😮">😮</button>
+                <button class="quick-reaction-btn extra-reaction" data-reaction="😴">😴</button>
+                <button class="quick-reaction-btn extra-reaction" data-reaction="🔥">🔥</button>
+                <button class="quick-reaction-btn extra-reaction" data-reaction="👏">👏</button>
+                <button class="quick-reaction-btn extra-reaction" data-reaction="🤝">🤝</button>
+                <button class="quick-reaction-btn extra-reaction" data-reaction="💯">💯</button>
+                <button class="quick-reaction-btn extra-reaction" data-reaction="✨">✨</button>
+            </div>
+            <button id="context-menu-expand-reactions" class="expand-reactions-btn" title="نمایش بقیه ریاکشن‌ها"
+                aria-expanded="false">
+                <svg class="expand-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <div class="context-menu-divider"></div>
+
+        <div class="context-menu-item" id="context-menu-select">
+            <span class="context-menu-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </span>
+            <span>انتخاب</span>
+        </div>
+        <div class="context-menu-item" id="context-menu-reply">
+            <span class="context-menu-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10 19l-7-7 7-7"></path>
+                    <path d="M3 12h11a4 4 0 0 1 4 4v1"></path>
+                </svg>
+            </span>
+            <span>پاسخ</span>
+        </div>
+        <div class="context-menu-item" id="context-menu-download" style="display: none;">
+            <span class="context-menu-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+            </span>
+            <span>دانلود</span>
+        </div>
+        <div class="context-menu-item" id="context-menu-edit" style="display: none;">
+            <span class="context-menu-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+            </span>
+            <span>ویرایش پیام</span>
+        </div>
+        <div class="context-menu-item" id="context-menu-copy">
+            <span class="context-menu-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+            </span>
+            <span>کپی</span>
+        </div>
+        <div class="context-menu-item danger" id="context-menu-delete-message" style="display: none;">
+            <span class="context-menu-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                    <path d="M10 11v6"></path>
+                    <path d="M14 11v6"></path>
+                </svg>
+            </span>
+            <span>حذف پیام</span>
+        </div>
+    </div>
+
+    <!-- Selection Toolbar for Multiple Messages -->
+    <div id="selection-toolbar" class="selection-toolbar" style="display: none;">
+        <div class="selection-info">
+            <span id="selected-count">0</span> پیام انتخاب شده
+        </div>
+        <div class="selection-actions">
+            <button class="selection-action-btn" id="deselect-all-btn" title="لغو انتخاب همه">
+                <span class="selection-action-icon">✕</span>
+            </button>
+            <button class="selection-action-btn" id="copy-selected-btn" title="کپی پیام‌های انتخاب شده">
+                <span class="selection-action-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </span>
+            </button>
+            <button class="selection-action-btn danger" id="delete-selected-btn" title="حذف پیام‌های انتخاب شده">
+                <span class="selection-action-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                        <path d="M10 11v6"></path>
+                        <path d="M14 11v6"></path>
+                    </svg>
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Context Menu for Chat List -->
+    <div id="context-menu" class="context-menu">
+        <div class="context-menu-item danger" id="context-menu-delete">
+            <span class="context-menu-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                    <path d="M10 11v6"></path>
+                    <path d="M14 11v6"></path>
+                </svg>
+            </span>
+            <span id="context-menu-text">حذف گفتگو</span>
+        </div>
+    </div>
+
+    <script src="media-handler.js"></script>
+    <script src="lazy-media-observer.js"></script>
+    <script src="moderation.js"></script>
+    <script src="app.js"></script>
+    <script src="/config.js"></script>
+    <script src="auth.js"></script>
+    <script src="panels.js"></script>
+    <script src="emojis.js"></script>
+</body>
+
+</html>
