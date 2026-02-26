@@ -1,0 +1,9 @@
+node_modules/
+server/users.db
+server/messages.db
+*.log
+.env
+.DS_Store
+*.swp
+*.swo
+*~
